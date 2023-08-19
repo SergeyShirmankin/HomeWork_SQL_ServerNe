@@ -6,6 +6,20 @@
 
 SOCKET Connection[100];
 int Counter = 0;
+//-----------------------------------------------------------------------------
+std::string  recivMess(char arryChar[]) //формирование сообщения для полученная с сервера
+{
+	char tempChar = 't';//инициализация пустой ячейки  значением "temp"
+	int i = 0;
+	std::string tempStr = "";
+	while (tempChar != '\0')
+	{
+		tempChar = arryChar[i];
+		tempStr = tempStr + tempChar;
+		i++;
+	}
+	return  tempStr;
+}
 //-------------------------------------------------------------------------------
 void ClientHandler(int index)
 {

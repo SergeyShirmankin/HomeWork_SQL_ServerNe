@@ -24,12 +24,18 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="LogPass.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServerNet.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="SQL.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="LogPass.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
