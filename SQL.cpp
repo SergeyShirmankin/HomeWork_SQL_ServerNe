@@ -1,9 +1,9 @@
 ﻿#include <iostream>
 #include <mysql.h>
-
+#include "SQL.h"
 using namespace std;
 
-int main() {
+void  mainSQL() {
 	MYSQL mysql;
 	MYSQL_RES* res;
 	MYSQL_ROW row;
@@ -47,6 +47,4 @@ int main() {
 	mysql_close(&mysql);
 
 	system("Pause");
-
-	return 0;
 }
