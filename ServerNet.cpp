@@ -2,11 +2,18 @@
 #include <winsock2.h>
 #include <iostream>
 #include "SQL.h"
+#include "LogPass.h"
 #pragma warning (disable:4996)
+#define RUN
+
+
 
 SOCKET Connection[100];
 int Counter = 0;
-//-----------------------------------------------------------------------------
+int message_size;
+const char* end_string = "end";
+Log_pass  objLogPass;
+
 std::string  recivMess(char arryChar[]) //формирование сообщения для полученная с сервера
 {
 	char tempChar = 't';//инициализация пустой ячейки  значением "temp"
@@ -18,24 +25,30 @@ std::string  recivMess(char arryChar[]) //формирование сообщения для полученная 
 		tempStr = tempStr + tempChar;
 		i++;
 	}
+	
 	return  tempStr;
 }
 //-------------------------------------------------------------------------------
 void ClientHandler(int index)
 {
-	char msg[256];
+	//char msg[256];
+	char buffer[256];
 	while (true)
 	{
-		recv(Connection[index], msg, sizeof(msg), NULL);
+#ifdef RUN
+		message_size=recv(Connection[index], buffer, sizeof(buffer), NULL);
 		for (int i = 0; i < Counter; i++)
 		{
 			if (i == index)
 			{
 				continue;
 			}
-			send(Connection[i], msg, sizeof(msg), NULL);
+		//	send(Connection[i], msg, sizeof(msg), NULL);
 		}
-
+		objLogPass.parser(buffer);
+#else
+		std::cout << "Hello" << std::endl;
+#endif
 	}
 }
 //-------------------------------------------------------------------------------

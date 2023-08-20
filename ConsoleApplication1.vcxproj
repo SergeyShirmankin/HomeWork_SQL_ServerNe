@@ -155,13 +155,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="file.cpp" />
     <ClCompile Include="LogPass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ServerNet.cpp" />
     <ClCompile Include="SQL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="file.h" />
     <ClInclude Include="LogPass.h" />
+    <ClInclude Include="RunlogPass.h" />
     <ClInclude Include="ServerNet.h" />
     <ClInclude Include="SQL.h" />
   </ItemGroup>
