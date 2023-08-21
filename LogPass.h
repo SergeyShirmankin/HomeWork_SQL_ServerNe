@@ -14,7 +14,7 @@ public:
 	void set_NumMess(const std::string&);  //количество сообщени
 	void set_NumCurrMess(const std::string&); //номер сообщения
 	void set_Messaqge(const std::string&);
-	std::string Messaqge;
+	//std::string Messaqge;
 	void set_StateProgram(int);
 
 	std::string& get_PasswordUser();
@@ -49,4 +49,5 @@ private:
 	std::string CurrentState;//Текущее состояние программы
 	std::string NumCurrMess; //номер сообщения
 	std::string NumMess;  //количество сообщени
+	std::string Messaqge;//само сообщение
 };

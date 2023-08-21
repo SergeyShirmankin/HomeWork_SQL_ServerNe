@@ -1,11 +1,16 @@
 #include <iostream>
 #include "LogPass.h"
 #include "ServerNet.h"
+#include <winsock2.h>
+#include "SQL.h"
+#pragma warning (disable:4996)
+
 #define DEBUG
 Log_pass::Log_pass()//конструктор по умолчанию
 {
 	StateProgram = 1;
 	countObjectLogPass = 0;
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)createSQL, NULL, NULL, NULL);
 }
 
 void Log_pass::set_StateProgram(int newStateProgram)

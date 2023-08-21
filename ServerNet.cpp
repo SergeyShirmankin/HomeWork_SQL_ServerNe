@@ -12,7 +12,7 @@ SOCKET Connection[100];
 int Counter = 0;
 int message_size;
 const char* end_string = "end";
-Log_pass  objLogPass;
+//Log_pass  objLogPass;
 
 std::string  recivMess(char arryChar[]) //формирование сообщения для полученная с сервера
 {
@@ -31,21 +31,26 @@ std::string  recivMess(char arryChar[]) //формирование сообщения для полученная 
 //-------------------------------------------------------------------------------
 void ClientHandler(int index)
 {
-	//char msg[256];
+	char msg[256];
 	char buffer[256];
+	std::string sMsg ;
 	while (true)
 	{
 #ifdef RUN
+		int i = 0;
 		message_size=recv(Connection[index], buffer, sizeof(buffer), NULL);
-		for (int i = 0; i < Counter; i++)
+		for (; i < Counter; i++)
 		{
 			if (i == index)
 			{
 				continue;
-			}
-		//	send(Connection[i], msg, sizeof(msg), NULL);
+			}		
 		}
-		objLogPass.parser(buffer);
+		if (insert_Log_Pass_SQL(buffer, sMsg))//обмен сообщениями при успешной операции
+		{
+			strcpy(msg, sMsg.c_str());//преооразуем строку в массив char
+			send(Connection[i], msg, sizeof(msg), NULL);
+		}
 #else
 		std::cout << "Hello" << std::endl;
 #endif
@@ -89,9 +94,13 @@ void ClientHandler(int index)
 			Connection[i] = newConnection;
 			Counter++;
 			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandler, (LPVOID)(i), NULL, NULL);
-			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)mainSQL, NULL, NULL, NULL);
+			
 		}
 	}
 
 	system("pause");
 }
+
+   //CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)insert_Log_Pass_SQL, (LPVOID)(buffer), NULL, NULL);
+	   //std::cout << "message_size ="<< message_size << std::endl;
+	   //objLogPass.parser(buffer);

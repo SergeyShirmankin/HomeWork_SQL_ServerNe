@@ -1,5 +1,9 @@
 #pragma once
-bool createFile(std::string msg);//создани файла для обмнена мкежду потоками
-bool deleteFile();//удаление файла для обмнена мкежду потоками
-bool FileIsExist();//проверка существования файла 
-bool readFile(std::string& Mess);// чтение файла
+bool FileIsExistToServer();
+bool deleteFileToServer();
+bool createFileToServer(std::string msg);
+bool readFileToServer(std::string& Mess);
+bool FileIsExistFromServer();
+bool deleteFileFromServer();
+bool createFileFromServer(std::string msg);
+bool readFileFromServer(std::string& Mess);
