@@ -49,7 +49,7 @@ void ClientHandler(int index)
 		if (insert_Log_Pass_SQL(buffer, sMsg))//обмен сообщениями при успешной операции
 		{
 			strcpy(msg, sMsg.c_str());//преооразуем строку в массив char
-			send(Connection[i], msg, sizeof(msg), NULL);
+			send(Connection[index], msg, sizeof(msg), NULL);
 		}
 #else
 		std::cout << "Hello" << std::endl;

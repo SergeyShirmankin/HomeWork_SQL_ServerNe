@@ -12,7 +12,6 @@ using namespace std;
 std::string msgForClient()
 {
 	std::string tempStr ="*";//---знак начала сообщения
-	tempStr = tempStr + ":";// ---разделитель сообщения
 	tempStr =tempStr + objLogPass.get_PasswordUser();//--пароль 
 	tempStr = tempStr + ":";
 	tempStr = tempStr + objLogPass.get_NameUserSend();//--логин отправителя  сообщения
@@ -106,7 +105,7 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 		if (tempRequestProgram.compare("2") == 0)// хапрос на создание лога и пароля
 		{
 			//sLgn = "sega";
-			sLgn=objLogPass.get_NameUserRecive();
+			sLgn=objLogPass.get_NameUserSend();
 			strcpy(cLgn, sLgn.c_str());//преооразуем строку в массив char
 			//sPswrd = "123";
 			sPswrd = objLogPass.get_PasswordUser();
@@ -114,7 +113,9 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 			//------Проверка на наличие логина и пароля Создать решение
 			//...................................
 			//...................................
-			if (mysql_query(&mysql, "INSERT INTO _log_pass(id, login, password) values(default,cLgn,cPswrd)") == 0)
+			int err = mysql_query(&mysql, "INSERT INTO _log_pass(id, login, password) values(default,'cLgn','cPswrd')");
+			if (err==0)
+			//if (mysql_query(&mysql, "INSERT INTO _log_pass(id, login, password) values(default,cLgn,cPswrd)") == 0)
 			{
 				std::cout << " Запись Log Pass  создана \n";
 				objLogPass.set_CurrentState("3");//Успешное создание логина и пароля
