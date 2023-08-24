@@ -82,21 +82,20 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 	int i = 0;
 	std::string sLgn;
 	std::string sPswrd;
-	char cLgn [9];
-	char cPswrd[9];
+	char cLgn [10];
+	char cPswrd[10];
 	// Получаем дескриптор соединения
 	mysql_init(&mysql);
+	int errInsert = 1;
 	if (&mysql == nullptr) {
 		// Если дескриптор не получен — выводим сообщение об ошибке
 		cout << "Error: can't create MySQL-descriptor" << endl;
 	}
-
 	// Подключаемся к серверу
 	if (!mysql_real_connect(&mysql, "localhost", "root", "sega261970", "testdb", NULL, NULL, 0)) {
 		// Если нет возможности установить соединение с БД выводим сообщение об ошибке
 		cout << "Error: can't connect to database " << mysql_error(&mysql) << endl;
-	}
-	   
+	}	   
 	//Конвертировать string char
 	if (buffer != nullptr)
 	{
@@ -104,18 +103,26 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 		std::string  tempRequestProgram = objLogPass.get_Request();
 		if (tempRequestProgram.compare("2") == 0)// хапрос на создание лога и пароля
 		{
-			//sLgn = "sega";
 			sLgn=objLogPass.get_NameUserSend();
-			strcpy(cLgn, sLgn.c_str());//преооразуем строку в массив char
-			//sPswrd = "123";
 			sPswrd = objLogPass.get_PasswordUser();
-			strcpy(cPswrd, sPswrd.c_str());//преооразуем строку в массив char
-			//------Проверка на наличие логина и пароля Создать решение
-			//...................................
-			//...................................
-			int err = mysql_query(&mysql, "INSERT INTO _log_pass(id, login, password) values(default,'cLgn','cPswrd')");
-			if (err==0)
-			//if (mysql_query(&mysql, "INSERT INTO _log_pass(id, login, password) values(default,cLgn,cPswrd)") == 0)
+			std::string isLogPass = "SELECT * FROM _log_pass WHERE login = '" + sLgn + "'";
+			int errIsLogPass = mysql_query(&mysql, isLogPass.c_str());	
+			if ((res = mysql_store_result(&mysql)) && ( row = mysql_fetch_row(res)))
+			{
+				std::cout << " Такой логин  уже есть  \n";
+				objLogPass.set_CurrentState("5");//Такой логин  уже есть 
+				objLogPass.set_Messaqge("--");//--Создаем пустое сообение 
+				objLogPass.set_NumCurrMess("1");//--номер текущего сообщения
+				objLogPass.set_NumMess("1");//--количество сообщений
+				result = msgForClient();//Сформировать сообщение
+				return false;
+			}	
+			else
+			{
+				std::string insertLogPass = "INSERT INTO _log_pass(login, password) values('" + sLgn + "','" + sPswrd + "' )";
+				errInsert = mysql_query(&mysql, insertLogPass.c_str()); //------Проверка на наличие логина и пароля Создать решение
+			}
+			if (errInsert ==0)
 			{
 				std::cout << " Запись Log Pass  создана \n";
 				objLogPass.set_CurrentState("3");//Успешное создание логина и пароля
@@ -137,6 +144,27 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 				return false;
 			}
 		}
+
+		else if (tempRequestProgram.compare("6") == 0) //Авторизация  на лог и пароль
+		{
+			sLgn = objLogPass.get_NameUserSend();
+			strcpy(cLgn, sLgn.c_str());//преооразуем строку в массив char
+			sPswrd = objLogPass.get_PasswordUser();
+			strcpy(cPswrd, sPswrd.c_str());//преооразуем строку в массив char
+			int err = mysql_query(&mysql, "SELECT * FROM _log_pass  WHERE login ='cLgn' AND  password = 'cPswrd'");
+			if (err == 0)
+			{
+				if (res = mysql_store_result(&mysql)) {
+					while (row = mysql_fetch_row(res)) {
+						for (i = 0; i < mysql_num_fields(res); i++) {
+							cout << row[i] << "  ";
+						}
+						cout << endl;
+					}
+				}
+			}
+		}
+
 	}
 #ifdef  DEBUG_STEP_1
 	mysql_query(&mysql, "SELECT * FROM _log_pass"); //Делаем запрос к таблице
