@@ -115,7 +115,8 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 				objLogPass.set_NumCurrMess("1");//--номер текущего сообщения
 				objLogPass.set_NumMess("1");//--количество сообщений
 				result = msgForClient();//Сформировать сообщение
-				return false;
+				mysql_close(&mysql);
+				return true;
 			}	
 			else
 			{
@@ -130,6 +131,7 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 				objLogPass.set_NumCurrMess("1");//--номер текущего сообщения
 				objLogPass.set_NumMess("1");//--количество сообщений
 				result = msgForClient();//Сформировать сообщение
+				mysql_close(&mysql);
 				return true;
 			}
 			else
@@ -141,7 +143,8 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 				objLogPass.set_NumCurrMess("1");//--номер текущего сообщения
 				objLogPass.set_NumMess("1");//--количество сообщений
 				result = msgForClient();//Сформировать сообщение
-				return false;
+				mysql_close(&mysql);
+				return true;
 			}
 		}
 
@@ -160,6 +163,7 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 				objLogPass.set_NumCurrMess("1");//--номер текущего сообщения
 				objLogPass.set_NumMess("1");//--количество сообщений
 				result = msgForClient();//Сформировать сообщение
+				mysql_close(&mysql);
 				return true;
 			}
 			else
@@ -170,6 +174,7 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 				objLogPass.set_NumCurrMess("1");//--номер текущего сообщения
 				objLogPass.set_NumMess("1");//--количество сообщений
 				result = msgForClient();//Сформировать сообщение
+				mysql_close(&mysql);
 				return false;
 			}
 		}

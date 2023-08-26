@@ -34,10 +34,13 @@ void ClientHandler(int index)
 	char msg[256];
 	char buffer[256];
 	std::string sMsg ;
+	std::string  nullStr = "";
 	while (true)
 	{
 #ifdef RUN
 		int i = 0;
+
+		strcpy(buffer, nullStr.c_str());//Ξανσλÿεμ ασττεπ
 		message_size=recv(Connection[index], buffer, sizeof(buffer), NULL);
 		for (; i < Counter; i++)
 		{
