@@ -57,17 +57,24 @@ void  createSQL() {
 //------------------------ Создаем таблицу для логинов и паролей-------------------------------------------------------------
 	
 	if (mysql_query(&mysql, "CREATE TABLE _log_pass(id INT AUTO_INCREMENT PRIMARY KEY, login VARCHAR(10),password VARCHAR(10))") == 0)
-		std::cout << " Создал базу данных для Логина и пароля\n";
+		std::cout << " Создал таблицу для Логина и пароля\n";
 	else
-		std::cout << "Не смог создать базу данных для Логина и пароля, возможно она уже создана\n";	
+		std::cout << "Не смог создать таблицу  для Логина и пароля, возможно она уже создана\n";	
 
 //-----------------------------------------------------------------------------------------------------------------------------
 //----------------------------- создаем таблицу для сообщений------------------------------------------------------------------
 
 	if (mysql_query(&mysql, "CREATE TABLE Messages(id INT AUTO_INCREMENT PRIMARY KEY,own VARCHAR(10),receiver VARCHAR(10),message VARCHAR(200))") == 0)
-		std::cout << " Создал базу данных для Логина и пароля\n";
+		std::cout << " Создал таблицу для Логина и пароля\n";
 	else
-		std::cout << "Не смог создать базу для сообщений, возможно она уже создана\n";
+		std::cout << "Не смог создать таблицу для сообщений, возможно она уже создана\n";
+//-----------------------------------------------------------------------------------------------------------------------------
+//----------------------------- создаем таблицу текущих пользователей------------------------------------------------------------------
+
+	if (mysql_query(&mysql, "CREATE TABLE onlineUsers(user VARCHAR(10),stateUser VARCHAR(10))") == 0)
+		std::cout << " Создал таблицу для активных пользователей\n";
+	else
+		std::cout << "Не смог создать таблицу для активных пользователей, возможно она уже создана\n";
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -158,7 +165,15 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 			if ((res = mysql_store_result(&mysql)) && (row = mysql_fetch_row(res)))
 			{
 				std::cout << " Успешное автоизация  \n";
-				objLogPass.set_CurrentState("7");//Такой логин  уже есть 
+				
+				std::string insertUsers = "INSERT INTO onlineUsers(user, stateUser) values('" + sLgn + "','1' )";// 1 user на линиии
+				errInsert = mysql_query(&mysql, insertUsers.c_str()); //------Проверка на наличие логина и пароля Создать решение
+				if (errInsert == 0)
+					std::cout << " Запись в таблицу onlineUsers  создана \n";
+				else 
+					std::cout << "Не смог создать запись в таблицу onlineUsers \n";
+
+				objLogPass.set_CurrentState("7");//Успешная активация 
 				objLogPass.set_Messaqge("--");//--Создаем пустое сообение 
 				objLogPass.set_NumCurrMess("1");//--номер текущего сообщения
 				objLogPass.set_NumMess("1");//--количество сообщений
@@ -177,6 +192,21 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 				mysql_close(&mysql);
 				return true;
 			}
+		}
+
+		else if (tempRequestProgram.compare("9") == 0) //Запрос о количестве пользователей на линии
+		{
+			std::string isUser = "SELECT * FROM onlineUsers";
+			int errIsUsers = mysql_query(&mysql, isUser.c_str());
+			if (errIsUsers == 0)
+			{
+				if ((res = mysql_store_result(&mysql)) && (row = mysql_fetch_row(res)))
+				{
+					std::cout << "Создать ответ на запрос" << std::endl;
+				}
+			}
+			mysql_close(&mysql);
+			return true;
 		}
 	}
 	mysql_close(&mysql);
