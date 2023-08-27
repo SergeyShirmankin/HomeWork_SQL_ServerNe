@@ -175,7 +175,7 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 				objLogPass.set_NumMess("1");//--количество сообщений
 				result = msgForClient();//Сформировать сообщение
 				mysql_close(&mysql);
-				return false;
+				return true;
 			}
 		}
 	}
