@@ -102,7 +102,10 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 	if (!mysql_real_connect(&mysql, "localhost", "root", "sega261970", "testdb", NULL, NULL, 0)) {
 		// Если нет возможности установить соединение с БД выводим сообщение об ошибке
 		cout << "Error: can't connect to database " << mysql_error(&mysql) << endl;
-	}	   
+	}	
+
+
+
 	//Конвертировать string char
 	if (buffer != nullptr)
 	{
@@ -196,13 +199,84 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 
 		else if (tempRequestProgram.compare("9") == 0) //Запрос о количестве пользователей на линии
 		{
+			MYSQL_ROW tempRow;
+			MYSQL_FIELD* field;
 			std::string isUser = "SELECT * FROM onlineUsers";
 			int errIsUsers = mysql_query(&mysql, isUser.c_str());
 			if (errIsUsers == 0)
 			{
+//				if ((res = mysql_store_result(&mysql)) && (row = mysql_fetch_row(res)))
+		        if (res = mysql_store_result(&mysql))
+				{
+                    int num_fields = mysql_num_fields(res); // количество полей
+                    int num_rows = mysql_num_rows(res); // и количество строк.
+     //              for (int i = 0; i < num_fields; i++) // Выводим названия полей
+     //              {
+     //             	field = mysql_fetch_field_direct(res, i); // Получение названия текущего поля
+					//std::cout << "field->name = " << field->name << std::endl;
+     //              }
+
+				  // for (int i = 0; i < num_rows; i++) // Вывод таблицы
+					while(tempRow = mysql_fetch_row(res))
+				   {
+				   	std::cout<< "row[0] = "<< tempRow[0]<<std::endl; // Выводим поля
+				//	row = mysql_fetch_row(res); // получаем строку
+				   }
+				}
+			}
+			mysql_close(&mysql);
+			return true;
+
+			//-----------------------------------------------------------------------------
+			//res = mysql_store_result(&mysql); // Берем результат,
+			//int num_fields = mysql_num_fields(res); // количество полей
+			//int num_rows = mysql_num_rows(res); // и количество строк.
+
+			//for (int i = 0; i < num_fields; i++) // Выводим названия полей
+			//{
+			//	field = mysql_fetch_field_direct(res, i); // Получение названия текущего поля
+			//	printf(” | % s | ”, field->name);
+			//}
+
+			//printf(”\n”);
+
+			//for (int i = 0; i < num_rows; i++) // Вывод таблицы
+			//{
+			//	row = mysql_fetch_row(res); // получаем строку
+
+			//	for (int l = 0; l < num_fields; l++)
+			//		printf("| %s |", row[l]); // Выводим поля
+
+			//	printf(”\n”);
+			//}
+
+			//----------------------------------------------------------------------------
+
+		}
+		else if (tempRequestProgram.compare("14") == 0) //Запрос об удаление ползоваетелей
+		{
+		sLgn = objLogPass.get_NameUserSend();
+		std::string isUser = "SELECT * FROM onlineUsers WHERE user = '" + sLgn + "'";
+		int errIsUser = mysql_query(&mysql, isUser.c_str());
+	
+			if (errIsUser == 0)
+			{
 				if ((res = mysql_store_result(&mysql)) && (row = mysql_fetch_row(res)))
 				{
-					std::cout << "Создать ответ на запрос" << std::endl;
+					isUser = "DELETE  FROM onlineUsers WHERE user = '" + sLgn + "'";
+					int errIsUser = mysql_query(&mysql, isUser.c_str());
+					if (errIsUser == 0)
+					{
+						std::cout << "Удалось удалить записи онлайн пользователей\n";
+						mysql_close(&mysql);
+						return true;
+					}
+					else
+					{
+						std::cout << "Ошибка удаления  записи онлайн пользователей\n";
+						mysql_close(&mysql);
+						return true;
+					}
 				}
 			}
 			mysql_close(&mysql);

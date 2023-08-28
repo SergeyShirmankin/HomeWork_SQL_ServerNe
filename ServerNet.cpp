@@ -62,7 +62,6 @@ void ClientHandler(int index)
 //-------------------------------------------------------------------------------
    void mainNet()
 {
-	//WSAStartup
 	WSAData wsaData;
 	WORD DLLVersion = MAKEWORD(2, 1);
 	if (WSAStartup(DLLVersion, &wsaData) != 0)
@@ -104,6 +103,4 @@ void ClientHandler(int index)
 	system("pause");
 }
 
-   //CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)insert_Log_Pass_SQL, (LPVOID)(buffer), NULL, NULL);
-	   //std::cout << "message_size ="<< message_size << std::endl;
-	   //objLogPass.parser(buffer);
+  
