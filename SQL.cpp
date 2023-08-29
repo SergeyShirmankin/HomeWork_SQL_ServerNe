@@ -199,57 +199,35 @@ bool  insert_Log_Pass_SQL(char buffer[256],std::string & result)
 
 		else if (tempRequestProgram.compare("9") == 0) //Запрос о количестве пользователей на линии
 		{
+			std::string msgClient="";
 			MYSQL_ROW tempRow;
 			MYSQL_FIELD* field;
+			std::string tmpStrForClient;
 			std::string isUser = "SELECT * FROM onlineUsers";
 			int errIsUsers = mysql_query(&mysql, isUser.c_str());
 			if (errIsUsers == 0)
 			{
-//				if ((res = mysql_store_result(&mysql)) && (row = mysql_fetch_row(res)))
 		        if (res = mysql_store_result(&mysql))
 				{
                     int num_fields = mysql_num_fields(res); // количество полей
                     int num_rows = mysql_num_rows(res); // и количество строк.
-     //              for (int i = 0; i < num_fields; i++) // Выводим названия полей
-     //              {
-     //             	field = mysql_fetch_field_direct(res, i); // Получение названия текущего поля
-					//std::cout << "field->name = " << field->name << std::endl;
-     //              }
-
-				  // for (int i = 0; i < num_rows; i++) // Вывод таблицы
 					while(tempRow = mysql_fetch_row(res))
 				   {
-				   	std::cout<< "row[0] = "<< tempRow[0]<<std::endl; // Выводим поля
-				//	row = mysql_fetch_row(res); // получаем строку
+				   	std::cout<< "row[0] = "<< tempRow[0]<<std::endl; // Выводим поля				
+					msgClient = msgClient + "  "+ tempRow[0];
+
 				   }
+					objLogPass.set_CurrentState("10");//Такой логин  уже есть 
+					objLogPass.set_Messaqge(msgClient);//--Создаем  сообение 
+					objLogPass.set_NumCurrMess("1");//--номер текущего сообщения
+					objLogPass.set_NumMess("1");//--количество сообщений
+					result = msgForClient();//Сформировать сообщение
+					mysql_close(&mysql);
+					return true;
 				}
 			}
 			mysql_close(&mysql);
 			return true;
-
-			//-----------------------------------------------------------------------------
-			//res = mysql_store_result(&mysql); // Берем результат,
-			//int num_fields = mysql_num_fields(res); // количество полей
-			//int num_rows = mysql_num_rows(res); // и количество строк.
-
-			//for (int i = 0; i < num_fields; i++) // Выводим названия полей
-			//{
-			//	field = mysql_fetch_field_direct(res, i); // Получение названия текущего поля
-			//	printf(” | % s | ”, field->name);
-			//}
-
-			//printf(”\n”);
-
-			//for (int i = 0; i < num_rows; i++) // Вывод таблицы
-			//{
-			//	row = mysql_fetch_row(res); // получаем строку
-
-			//	for (int l = 0; l < num_fields; l++)
-			//		printf("| %s |", row[l]); // Выводим поля
-
-			//	printf(”\n”);
-			//}
-
 			//----------------------------------------------------------------------------
 
 		}
